@@ -9,17 +9,19 @@ public class PlayerController : MonoBehaviour
 	public GameObject marker;
 	private Rigidbody2D rigid;
 
+	private bool _markerVisible = false;
+
+	private float _startPosition = 0f;
+	public float distance = 0f;
+
 	// callback
 	private Action _readyCallback; // 準備できた
 	private Action _deadCallback;  // しんだ
 
 	// params
 	public float dropPower = 2000f;
+	public float startSpeed = 0.25f;
 
-	private bool _markerVisible = false;
-
-	private float _startPosition = 0f;
-	public float distance = 0f;
 
 	/// <summary>
 	/// initialize
@@ -108,7 +110,7 @@ public class PlayerController : MonoBehaviour
 				}
 				break;
 			case GameController.State.Ready:
-				transform.localPosition += new Vector3(0.5f, 0f);
+				transform.localPosition += new Vector3(startSpeed, 0f);
 				_startPosition = transform.localPosition.x;
 				FollowPlayer();
 				break;

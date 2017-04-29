@@ -16,8 +16,7 @@ public class GameController : MonoBehaviour
 
 	public PlayerController player;
 	public StageController stage;
-
-	public UnityEngine.UI.Text scoreLabel;
+	public UIController ui;
 
 	void Start()
 	{
@@ -29,6 +28,7 @@ public class GameController : MonoBehaviour
 	private void _init()
 	{
 		Application.targetFrameRate = 60;
+		stage.Init();
 		player.Init(() => _ready(), () => _gameOver());
 		player.Ready();
 		state = State.InitPlayer;
@@ -36,11 +36,13 @@ public class GameController : MonoBehaviour
 
 	private void _ready()
 	{
+		ui.ShowDesc();
 		state = State.Ready;
 	}
 
 	private void _startGame()
 	{
+		ui.HideDesc();
 		state = State.Playing;
 		player.Drop();
 	}
@@ -55,11 +57,6 @@ public class GameController : MonoBehaviour
 		player.Lock();
 	}
 
-	private void _refreshScore()
-	{
-		scoreLabel.text = string.Format("{0:0.00}", player.distance);
-	}
-
 	void Update()
 	{
 		switch (state)
@@ -71,7 +68,7 @@ public class GameController : MonoBehaviour
 				}
 				break;
 			case State.Playing:
-				_refreshScore();
+				ui.SetScore(player.distance);
 				if (Input.GetKeyDown("s"))
 				{
 					// debug
