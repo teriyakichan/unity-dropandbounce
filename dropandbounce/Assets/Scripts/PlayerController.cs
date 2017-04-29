@@ -11,8 +11,12 @@ public class PlayerController : MonoBehaviour
 
 	private bool _markerVisible = false;
 
+	// 飛距離
 	private float _startPosition = 0f;
 	public float distance = 0f;
+
+	// 残ドロップ回数
+	public int drops = 3;
 
 	// callback
 	private Action _readyCallback; // 準備できた
@@ -64,6 +68,7 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	public void Ready()
 	{
+		drops = 3;
 		StartCoroutine(_ready());
 	}
 	private IEnumerator _ready()
@@ -82,8 +87,10 @@ public class PlayerController : MonoBehaviour
 	/// <summary>
 	/// stop & drop
 	/// </summary>
-	public void Drop()
+	public void Drop(bool init = false)
 	{
+		if (drops == 0) return;
+		if (!init) --drops;
 		rigid.gravityScale = 1f;
 		rigid.velocity = Vector2.zero;
 		rigid.AddForce(new Vector2(0, -1 * dropPower), ForceMode2D.Force);

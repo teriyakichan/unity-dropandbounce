@@ -29,9 +29,11 @@ public class GameController : MonoBehaviour
 	{
 		Application.targetFrameRate = 60;
 		stage.Init();
+		// プレイヤー初期化
 		player.Init(() => _ready(), () => _gameOver());
 		player.Ready();
 		state = State.InitPlayer;
+		ui.SetDrops(player.drops);
 	}
 
 	private void _ready()
@@ -45,6 +47,7 @@ public class GameController : MonoBehaviour
 		ui.HideDesc();
 		state = State.Playing;
 		player.Drop();
+		ui.SetDrops(player.drops);
 	}
 
 	/// <summary>
@@ -66,6 +69,7 @@ public class GameController : MonoBehaviour
 		// restart
 		player.Ready();
 		state = State.InitPlayer;
+		ui.SetDrops(player.drops);
 	}
 
 	void Update()
@@ -87,6 +91,7 @@ public class GameController : MonoBehaviour
 				if (Input.GetKeyDown("space"))
 				{
 					player.Drop();
+					ui.SetDrops(player.drops);
 				}
 				break;
 		}
