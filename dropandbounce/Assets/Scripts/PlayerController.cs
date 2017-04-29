@@ -6,11 +6,14 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 	public Transform cameraTrans;
+	public GameObject marker;
 	private Rigidbody2D rigid;
 
 	// callback
 	private Action _readyCallback; // 準備できた
 	private Action _deadCallback;  // しんだ
+
+	private bool _markerVisible = false;
 
 	/// <summary>
 	/// initialize
@@ -21,6 +24,7 @@ public class PlayerController : MonoBehaviour
 		rigid = GetComponent<Rigidbody2D>();
 		_deadCallback = deadCallback;
 		_readyCallback = readyCallback;
+		marker.SetActive(false);
 		Lock();
 	}
 	public void Lock()
@@ -70,6 +74,21 @@ public class PlayerController : MonoBehaviour
 		cameraTrans.localPosition = new Vector2(transform.localPosition.x + 5, 0);
 	}
 
+	// マーカー表示/非表示
+	private void _showMarker()
+	{
+		if (_markerVisible) return;
+		_markerVisible = !_markerVisible;
+		marker.SetActive(true);
+		marker.transform.localPosition = new Vector2(transform.localPosition.x, 4.5f);
+	}
+	private void _hideMarker()
+	{
+		if (!_markerVisible) return;
+		_markerVisible = !_markerVisible;
+		marker.SetActive(false);
+	}
+
 	// Update is called once per frame
 	void Update()
 	{
@@ -86,9 +105,19 @@ public class PlayerController : MonoBehaviour
 				FollowPlayer();
 				break;
 			case GameController.State.Playing:
+				marker.transform.localPosition = new Vector2(transform.localPosition.x, 4.5f);
 				// カメラ追従
 				if (rigid.velocity.x > 0)
 					FollowPlayer();
+				// 範囲外マーカー
+				if (transform.localPosition.y > 5.5f)
+				{
+					_showMarker();
+				}
+				else
+				{
+					_hideMarker();
+				}
 				// 死亡判定
 				_checkAlive();
 				break;

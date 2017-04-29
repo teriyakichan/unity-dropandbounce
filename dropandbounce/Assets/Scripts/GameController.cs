@@ -15,6 +15,7 @@ public class GameController : MonoBehaviour
 	}
 
 	public PlayerController player;
+	public StageController stage;
 
 	void Start()
 	{
