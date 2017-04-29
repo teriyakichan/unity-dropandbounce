@@ -12,7 +12,7 @@ public class UIController : MonoBehaviour
 
 	}
 
-	// Space to Dropの表示切替j
+	// Space to Dropの表示切替
 	public void ShowDesc()
 	{
 		descLabel.SetActive(true);

@@ -64,8 +64,19 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	public void Ready()
 	{
+		StartCoroutine(_ready());
+	}
+	private IEnumerator _ready()
+	{
+		// 初期座標に戻す
+		// trailが飛ぶため一旦消す
+		transform.localPosition = new Vector2(cameraTrans.localPosition.x - 10f, transform.localPosition.y);
+		GetComponent<TrailRenderer>().time = 0f;
+		yield return true;
 		distance = 0f;
 		transform.localPosition = new Vector2(cameraTrans.localPosition.x - 10f, 3f);
+		yield return true;
+		GetComponent<TrailRenderer>().time = 2f;
 	}
 
 	/// <summary>

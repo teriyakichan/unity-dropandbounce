@@ -55,6 +55,17 @@ public class GameController : MonoBehaviour
 		Debug.Log("gameover");
 		state = State.GameOver;
 		player.Lock();
+
+		// TODO
+
+		StartCoroutine(_restart());
+	}
+	private IEnumerator _restart()
+	{
+		yield return new WaitForSeconds(1f);
+		// restart
+		player.Ready();
+		state = State.InitPlayer;
 	}
 
 	void Update()
