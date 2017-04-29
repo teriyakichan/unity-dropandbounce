@@ -13,7 +13,13 @@ public class PlayerController : MonoBehaviour
 	private Action _readyCallback; // 準備できた
 	private Action _deadCallback;  // しんだ
 
+	// params
+	public float dropPower = 2000f;
+
 	private bool _markerVisible = false;
+
+	private float _startPosition = 0f;
+	public float distance = 0f;
 
 	/// <summary>
 	/// initialize
@@ -56,6 +62,7 @@ public class PlayerController : MonoBehaviour
 	/// </summary>
 	public void Ready()
 	{
+		distance = 0f;
 		transform.localPosition = new Vector2(cameraTrans.localPosition.x - 10f, 3f);
 	}
 
@@ -66,7 +73,7 @@ public class PlayerController : MonoBehaviour
 	{
 		rigid.gravityScale = 1f;
 		rigid.velocity = Vector2.zero;
-		rigid.AddForce(new Vector2(0, -1500), ForceMode2D.Force);
+		rigid.AddForce(new Vector2(0, -1 * dropPower), ForceMode2D.Force);
 	}
 
 	public void FollowPlayer()
@@ -102,13 +109,18 @@ public class PlayerController : MonoBehaviour
 				break;
 			case GameController.State.Ready:
 				transform.localPosition += new Vector3(0.5f, 0f);
+				_startPosition = transform.localPosition.x;
 				FollowPlayer();
 				break;
 			case GameController.State.Playing:
 				marker.transform.localPosition = new Vector2(transform.localPosition.x, 4.5f);
 				// カメラ追従
 				if (rigid.velocity.x > 0)
+				{
 					FollowPlayer();
+					float distance = transform.localPosition.x - _startPosition;
+					if (distance > this.distance) this.distance = distance;
+				}
 				// 範囲外マーカー
 				if (transform.localPosition.y > 5.5f)
 				{
