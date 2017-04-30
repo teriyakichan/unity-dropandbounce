@@ -5,21 +5,18 @@ using EnhancedUI.EnhancedScroller;
 
 public class RankingView : MonoBehaviour, IEnhancedScrollerDelegate
 {
-	private SmallList<RankingData> _dataList;
+	private SmallList<RankingData> _dataList = new SmallList<RankingData>();
 	public EnhancedScroller scroller;
 	public EnhancedScrollerCellView cellViewPrefab;
 
 	void Start()
 	{
 		scroller.Delegate = this;
-		LoadLargeData();
 	}
 
-	private void LoadLargeData()
+	public void LoadData(SmallList<RankingData> dataList)
 	{
-		_dataList = new SmallList<RankingData>();
-		for (var i = 0; i < 1000; i++)
-			_dataList.Add(new RankingData(){ rank = i + 1, name = "hoge" + i, score = (float)(i * 12.24f) });
+		_dataList = dataList;
 		scroller.ReloadData();
 	}
 

@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// UI表示制御
+/// </summary>
 public class UIController : MonoBehaviour
 {
 	public GameObject descLabel;

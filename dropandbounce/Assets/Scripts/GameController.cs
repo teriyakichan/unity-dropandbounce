@@ -27,13 +27,14 @@ public class GameController : MonoBehaviour
 	/// </summary>
 	private void _init()
 	{
-		Application.targetFrameRate = 60;
 		stage.Init();
 		// プレイヤー初期化
 		player.Init(() => _ready(), () => _gameOver());
 		player.Ready();
 		state = State.InitPlayer;
 		ui.SetDrops(player.drops);
+		// ランキング情報取得
+		ranking.RefreshScoreList();
 	}
 
 	private void _ready()
@@ -57,12 +58,14 @@ public class GameController : MonoBehaviour
 	/// </summary>
 	private void _gameOver()
 	{
-		Debug.Log("gameover");
 		state = State.GameOver;
 		player.Lock();
 
 		// TODO
+		ranking.SendScore(player.distance);
 
+		// ランキング情報更新
+		ranking.RefreshScoreList();
 		StartCoroutine(_restart());
 	}
 	private IEnumerator _restart()
