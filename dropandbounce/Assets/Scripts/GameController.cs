@@ -93,11 +93,9 @@ public class GameController : MonoBehaviour
 		state = State.GameOver;
 		player.Lock();
 
-		// TODO
+		// スコア送信
 		ranking.SendScore(player.distance);
 
-		// ランキング情報更新
-		ranking.RefreshScoreList();
 		StartCoroutine(_restart());
 	}
 	private IEnumerator _restart()

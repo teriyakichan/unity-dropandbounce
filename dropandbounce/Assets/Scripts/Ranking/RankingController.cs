@@ -43,8 +43,17 @@ public class RankingController : MonoBehaviour
 		using (WWW www = new WWW(SERVER_URL + API_ADDSCORE, form))
 		{
 			yield return www;
+			yield return new WaitWhile(() => !www.isDone);
 			if (!string.IsNullOrEmpty(www.error))
+			{
 				Debug.Log(www.error);
+			}
+			else
+			{
+				string res = www.text;
+				if (!string.IsNullOrEmpty(res))
+					rankingView.LoadData(_parseRankingJson(res));
+			}
 		}
 	}
 

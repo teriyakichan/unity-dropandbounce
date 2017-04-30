@@ -14,20 +14,22 @@ $query = 'SELECT * FROM users WHERE code = "' . $_POST['user_code'] . '";';
 $result = select($link, $query);
 $userId = 0;
 if (count($result) == 0) {
-	echo 'user not found';
 	$query = 'INSERT INTO users (name, code) VALUES ("' . $_POST['name'] . '", "' . $_POST['user_code'] . '");';
 	if (insert($link, $query))
 		$userId = mysql_insert_id($link);
 } else {
-	echo 'user found';
 	$userId = $result[0]['id'];
 }
 if ($userId == 0) return;
-echo $userId . '<br/>';
 $query = 'INSERT INTO scores (user_id, score) VALUES ("' . $userId . '", ' . $_POST['score'] . ');';
-echo $query . '<br/>';
 insert($link, $query);
+
+// get updated ranking
+$query = 'SELECT scores.user_id, MAX(scores.score) as score, users.name from scores LEFT JOIN users ON scores.user_id = users.id WHERE 1 GROUP BY user_id ORDER BY score DESC;';
+$ranking = select($link, $query);
 
 // disconnect
 disconnect($link);
+
+echo json_encode($ranking);
 
