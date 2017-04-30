@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿//#define SAVE_USERINFO
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class GameController : MonoBehaviour
 	public static State state;
 	public enum State
 	{
+		InputName,  // 名前入力
 		InitPlayer, // プレイヤーを初期座標に配置
 		Ready,      // プレイ可能
 		Playing,    // プレイ中
@@ -28,13 +30,43 @@ public class GameController : MonoBehaviour
 	private void _init()
 	{
 		stage.Init();
+		ui.Init((name) => _inputNameFinished(name));
+		ui.SetDrops(player.drops);
 		// プレイヤー初期化
 		player.Init(() => _ready(), () => _gameOver());
-		player.Ready();
-		state = State.InitPlayer;
-		ui.SetDrops(player.drops);
+		// ユーザ名取得
+#if SAVE_USERINFO
+		string userName = PlayerPrefs.GetString("name");
+#else
+		string userName = RankingController.userName;
+#endif
+		if (string.IsNullOrEmpty(userName))
+		{
+			state = State.InputName;
+			ui.ShowTitle();
+			ui.HideDesc();
+		}
+		else
+		{
+			ui.HideTitle();
+			player.Ready();
+			state = State.InitPlayer;
+		}
 		// ランキング情報取得
 		ranking.RefreshScoreList();
+	}
+
+	private void _inputNameFinished(string name)
+	{
+		Debug.Log("name : " + name);
+#if SAVE_USERINFO
+		PlayerPrefs.SetString("name", name);
+#else
+		RankingController.userName = name;
+#endif
+		ui.HideTitle();
+		player.Ready();
+		state = State.InitPlayer;
 	}
 
 	private void _ready()

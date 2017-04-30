@@ -1,4 +1,5 @@
-﻿using System;
+﻿//#define SAVE_USERINFO
+using System;
 using System.Text;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,6 +15,9 @@ public class RankingController : MonoBehaviour
 
 	public RankingView rankingView;
 
+	public static string userCode = null;
+	public static string userName = null;
+
 	// スコア送信
 	public void SendScore(float score)
 	{
@@ -21,13 +25,20 @@ public class RankingController : MonoBehaviour
 	}
 	private IEnumerator _sendScore(float score)
 	{
-		string userCode = PlayerPrefs.GetString("user_code", null);
-		if (string.IsNullOrEmpty(userCode)) userCode = _generateUserCode();
-		Debug.Log(userCode);
-		string userName = "ななし";
+#if SAVE_USERINFO
+		string code = PlayerPrefs.GetString("user_code", null);
+#else
+		string code = userCode;
+#endif
+		if (string.IsNullOrEmpty(userCode)) code = _generateUserCode();
+
 		WWWForm form = new WWWForm();
-		form.AddField("user_code", userCode);
+		form.AddField("user_code", code);
+#if SAVE_USERINFO
+		form.AddField("name", PlayerPrefs.GetString("name"));
+#else
 		form.AddField("name", userName);
+#endif
 		form.AddField("score", score.ToString());
 		using (WWW www = new WWW(SERVER_URL + API_ADDSCORE, form))
 		{
@@ -101,7 +112,11 @@ public class RankingController : MonoBehaviour
 		code += DateTime.Now.ToString("yyyyMMddHHmmssfff");
 		code += UnityEngine.Random.Range(0, 10000).ToString();
 		code = Convert.ToBase64String(Encoding.UTF8.GetBytes(code));
+#if false
 		PlayerPrefs.SetString("user_code", code);
+#else
+		userCode = code;
+#endif
 		return code;
 	}
 }
