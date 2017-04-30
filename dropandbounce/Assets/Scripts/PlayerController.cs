@@ -99,12 +99,14 @@ public class PlayerController : MonoBehaviour
 	}
 
 	/// <summary>
-	/// ドロップ数回復
+	/// ドロップ数回復&ブースト
 	/// </summary>
 	public void Recover()
 	{
 		++drops;
 		if (drops > 3) drops = 3;
+		rigid.velocity = Vector2.zero;
+		rigid.AddForce(new Vector2(1500f, 500f), ForceMode2D.Force);
 	}
 
 	/// <summary>
