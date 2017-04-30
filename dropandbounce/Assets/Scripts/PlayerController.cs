@@ -20,7 +20,8 @@ public class PlayerController : MonoBehaviour
 
 	// callback
 	private Action _readyCallback; // 準備できた
-	private Action _deadCallback;  // しんだ
+	private Action _deadCallback; // しんだ
+	private Action<GameObject> _getItemCallback; // アイテムとった
 
 	// params
 	public float dropPower = 2000f;
@@ -31,11 +32,12 @@ public class PlayerController : MonoBehaviour
 	/// initialize
 	/// </summary>
 	/// <param name="deadCallback"></param>
-	public void Init(Action readyCallback, Action deadCallback)
+	public void Init(Action readyCallback, Action deadCallback, Action<GameObject> getItemCallback)
 	{
 		rigid = GetComponent<Rigidbody2D>();
 		_deadCallback = deadCallback;
 		_readyCallback = readyCallback;
+		_getItemCallback = getItemCallback;
 		marker.SetActive(false);
 		Lock();
 	}
@@ -96,6 +98,18 @@ public class PlayerController : MonoBehaviour
 		rigid.AddForce(new Vector2(0, -1 * dropPower), ForceMode2D.Force);
 	}
 
+	/// <summary>
+	/// ドロップ数回復
+	/// </summary>
+	public void Recover()
+	{
+		++drops;
+		if (drops > 3) drops = 3;
+	}
+
+	/// <summary>
+	/// カメラ追従
+	/// </summary>
 	public void FollowPlayer()
 	{
 		cameraTrans.localPosition = new Vector2(transform.localPosition.x + 5, 0);
@@ -114,6 +128,11 @@ public class PlayerController : MonoBehaviour
 		if (!_markerVisible) return;
 		_markerVisible = !_markerVisible;
 		marker.SetActive(false);
+	}
+
+	// アイテム取得
+	private void OnTriggerEnter2D(Collider2D coll) {
+		_getItemCallback.Invoke(coll.gameObject);
 	}
 
 	// Update is called once per frame

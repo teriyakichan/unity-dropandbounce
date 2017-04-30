@@ -33,7 +33,11 @@ public class GameController : MonoBehaviour
 		ui.Init((name) => _inputNameFinished(name));
 		ui.SetDrops(player.drops);
 		// プレイヤー初期化
-		player.Init(() => _ready(), () => _gameOver());
+		player.Init(
+			() => _ready(),
+			() => _gameOver(),
+			(item) => _getItem(item)
+			);
 		// ユーザ名取得
 #if SAVE_USERINFO
 		string userName = PlayerPrefs.GetString("name");
@@ -104,6 +108,13 @@ public class GameController : MonoBehaviour
 		// restart
 		player.Ready();
 		state = State.InitPlayer;
+		ui.SetDrops(player.drops);
+	}
+
+	private void _getItem(GameObject item)
+	{
+		stage.ResetItem(item);
+		player.Recover();
 		ui.SetDrops(player.drops);
 	}
 
