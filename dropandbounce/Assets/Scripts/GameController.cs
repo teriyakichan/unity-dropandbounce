@@ -11,12 +11,12 @@ public class GameController : MonoBehaviour
 		Ready,      // プレイ可能
 		Playing,    // プレイ中
 		GameOver,   // ゲームオーバー
-		Score,   // ゲームオーバー
 	}
 
 	public PlayerController player;
 	public StageController stage;
 	public UIController ui;
+	public RankingController ranking;
 
 	void Start()
 	{
@@ -39,12 +39,14 @@ public class GameController : MonoBehaviour
 	private void _ready()
 	{
 		ui.ShowDesc();
+		ui.ShowRanking();
 		state = State.Ready;
 	}
 
 	private void _startGame()
 	{
 		ui.HideDesc();
+		ui.HideRanking();
 		state = State.Playing;
 		player.Drop();
 		ui.SetDrops(player.drops);

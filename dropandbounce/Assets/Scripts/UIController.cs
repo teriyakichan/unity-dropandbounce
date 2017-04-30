@@ -6,12 +6,22 @@ public class UIController : MonoBehaviour
 {
 	public GameObject descLabel;
 	public UnityEngine.UI.Text scoreLabel;
+	public GameObject rankingList;
 
 	public List<UnityEngine.UI.Image> dropImages;
 
 	public void Init()
 	{
 
+	}
+
+	public void ShowRanking()
+	{
+		rankingList.SetActive(true);
+	}
+	public void HideRanking()
+	{
+		rankingList.SetActive(false);
 	}
 
 	// Space to Dropの表示切替
